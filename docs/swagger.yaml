@@ -1,0 +1,229 @@
+definitions:
+  big.Int:
+    type: object
+  handlers.ResponseHTTP:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  models.Group:
+    properties:
+      indexes:
+        items:
+          $ref: '#/definitions/big.Int'
+        type: array
+      name:
+        type: string
+    type: object
+  models.Index:
+    properties:
+      ethPriceInWei:
+        $ref: '#/definitions/big.Int'
+      id:
+        $ref: '#/definitions/big.Int'
+      name:
+        type: string
+      percentageChange:
+        $ref: '#/definitions/big.Int'
+      usdCapitalization:
+        $ref: '#/definitions/big.Int'
+      usdPriceInCents:
+        $ref: '#/definitions/big.Int'
+    type: object
+  types.Header:
+    properties:
+      baseFeePerGas:
+        $ref: '#/definitions/big.Int'
+        description: BaseFee was added by EIP-1559 and is ignored in legacy headers.
+      difficulty:
+        $ref: '#/definitions/big.Int'
+      extraData:
+        items:
+          type: integer
+        type: array
+      gasLimit:
+        type: integer
+      gasUsed:
+        type: integer
+      logsBloom:
+        items:
+          type: integer
+        type: array
+      miner:
+        items:
+          type: integer
+        type: array
+      mixHash:
+        items:
+          type: integer
+        type: array
+      nonce:
+        items:
+          type: integer
+        type: array
+      number:
+        $ref: '#/definitions/big.Int'
+      parentHash:
+        items:
+          type: integer
+        type: array
+      receiptsRoot:
+        items:
+          type: integer
+        type: array
+      sha3Uncles:
+        items:
+          type: integer
+        type: array
+      stateRoot:
+        items:
+          type: integer
+        type: array
+      timestamp:
+        type: integer
+      transactionsRoot:
+        items:
+          type: integer
+        type: array
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/blocks/{block}:
+    get:
+      consumes:
+      - application/json
+      description: Get Index by ID
+      parameters:
+      - description: BlockNumber|BlockHash|'latest'
+        in: path
+        name: block
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.ResponseHTTP'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/types.Header'
+                  type: array
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ResponseHTTP'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handlers.ResponseHTTP'
+      summary: Get Index by ID
+      tags:
+      - Indexes
+  /api/v1/groups:
+    get:
+      consumes:
+      - application/json
+      description: Get all groups
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.ResponseHTTP'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Group'
+                  type: array
+              type: object
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handlers.ResponseHTTP'
+      summary: Get all groups
+      tags:
+      - groups
+  /api/v1/groups/{groupId}:
+    get:
+      consumes:
+      - application/json
+      description: Get Group by ID
+      parameters:
+      - description: Group ID
+        in: path
+        name: groupId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.ResponseHTTP'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Group'
+                  type: array
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ResponseHTTP'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handlers.ResponseHTTP'
+      summary: Get Group by ID
+      tags:
+      - Groups
+  /api/v1/indexes/{indexId}:
+    get:
+      consumes:
+      - application/json
+      description: Get Index by ID
+      parameters:
+      - description: Index ID
+        in: path
+        name: indexId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.ResponseHTTP'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Index'
+                  type: array
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ResponseHTTP'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handlers.ResponseHTTP'
+      summary: Get Index by ID
+      tags:
+      - Indexes
+swagger: "2.0"
